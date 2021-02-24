@@ -14,15 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#define PY_SSIZE_T_CLEAN
-//#include <Python.h>
-#include <boost/multiprecision/cpp_int.hpp>
-#include <iostream>
+#include "fnv512.hpp"
 
-using namespace boost::multiprecision;
-using namespace boost::multiprecision::literals;
 
 constexpr uint512_t fnv_prime = 0x00000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000157_cppui512;
+
+char* create_buffer(size_t size){
+	return (char*) malloc(size);
+}
+void destroy_buffer(void* buffer){
+	free(buffer);
+}
 
 char nibble2hex(unsigned char nibble) {
   if (nibble < 10)
@@ -31,13 +33,72 @@ char nibble2hex(unsigned char nibble) {
     return 'a' + nibble - 10;
 }
 
+
+
+fnv_context* fnv512_init(int variant){
+	fnv_context* ctx = (fnv_context*) create_buffer(sizeof(fnv_context));
+	ctx->digest_bits = 512;
+	ctx->digest_bytes = 64;
+
+	if(variant<FNV_VARIANT_MIN || variant>FNV_VARIANT_MAX) variant = FNV_VARIANT_DEFAULT;
+	ctx->variant = variant;
+
+	switch(variant){
+		case FNV_VARIANT_0:
+			ctx->hash = 0;
+			break;
+		case FNV_VARIANT_1:
+		case FNV_VARIANT_1A:
+		default:
+  			ctx->hash = 0xb86db0b1171f4416dca1e50f309990acac87d059c90000000000000000000d21e948f68a34c192f62ea79bc942dbe7ce182036415f56e34bac982aac4afe9fd9_cppui512;
+			break;
+	}
+
+	return ctx;
+}
+
+void fnv512_cleanup(fnv_context* ctx){
+	destroy_buffer(ctx);
+}
+
+void fnv512_update(fnv_context* ctx, const char* data, size_t len){
+  if(ctx->variant==FNV_VARIANT_1A){
+	  for (size_t i = 0; i < len; i++) {
+  	  // xor with a byte of data
+    	ctx->hash ^= data[i];
+
+    	// multiplication by 2^344 + 2^8 + 0x57
+    	ctx->hash *= fnv_prime;
+  	}
+  }else{
+  	for (size_t i = 0; i < len; i++) {
+    	// multiplication by 2^344 + 2^8 + 0x57
+    	ctx->hash *= fnv_prime;
+
+    	// xor with a byte of data
+    	ctx->hash ^= data[i];
+  	}
+  }
+}
+
+void fnv512_final(fnv_context* ctx, char* hexdigest){
+   uint512_t hash = ctx->hash;//copy hash since we modify it - you could instead use directly since this *is* "final" but...
+   unsigned int hex_digest_len = ctx->digest_bytes * 2;
+   unsigned int hex_digest_max = hex_digest_len - 1;
+   for (unsigned int i = 0; i < hex_digest_len; i++) {
+    hexdigest[hex_digest_max - i] = nibble2hex(static_cast<unsigned char>(hash) & 0xf);
+    hash >>= 4;
+  }
+}
+
+
 const char*
-fnv0(const char* data, size_t len) {
+fnv0(const char* data, size_t len, char* hexdigest) {//hexdigest should be 64*2 chars long
 
   // implementation : https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-0_hash_(deprecated)
   uint512_t hash = 0;
 
-  for (Py_ssize_t i = 0; i < len; i++) {
+  for (size_t i = 0; i < len; i++) {
     // multiplication by 2^344 + 2^8 + 0x57
     hash *= fnv_prime;
 
@@ -45,7 +106,6 @@ fnv0(const char* data, size_t len) {
     hash ^= data[i];
   }
 
-  char hexdigest[64 * 2];
   for (unsigned int i = 0; i < 128; i++) {
     hexdigest[127 - i] = nibble2hex(static_cast<unsigned char>(hash) & 0xf);
     hash >>= 4;
@@ -54,12 +114,12 @@ fnv0(const char* data, size_t len) {
   return hexdigest;//128
 }
 const char*
-fnv1(const char* data, size_t len) {
+fnv1(const char* data, size_t len, char* hexdigest) {
 
   // implementation : https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1_hash
   uint512_t hash = 0xb86db0b1171f4416dca1e50f309990acac87d059c90000000000000000000d21e948f68a34c192f62ea79bc942dbe7ce182036415f56e34bac982aac4afe9fd9_cppui512;
 
-  for (Py_ssize_t i = 0; i < len; i++) {
+  for (size_t i = 0; i < len; i++) {
     // multiplication by 2^344 + 2^8 + 0x57
     hash *= fnv_prime;
 
@@ -67,7 +127,6 @@ fnv1(const char* data, size_t len) {
     hash ^= data[i];
   }
 
-  char hexdigest[64 * 2];
   for (unsigned int i = 0; i < 128; i++) {
     hexdigest[127 - i] = nibble2hex(static_cast<unsigned char>(hash) & 0xf);
     hash >>= 4;
@@ -75,12 +134,12 @@ fnv1(const char* data, size_t len) {
   return hexdigest;//128
 }
 const char*
-fnv1a(const char* data, size_t len) {
+fnv1a(const char* data, size_t len, char* hexdigest) {
 
   // implementation : https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1a_hash
   uint512_t hash = 0xb86db0b1171f4416dca1e50f309990acac87d059c90000000000000000000d21e948f68a34c192f62ea79bc942dbe7ce182036415f56e34bac982aac4afe9fd9_cppui512;
 
-  for (Py_ssize_t i = 0; i < len; i++) {
+  for (size_t i = 0; i < len; i++) {
     // xor with a byte of data
     hash ^= data[i];
 
@@ -88,7 +147,6 @@ fnv1a(const char* data, size_t len) {
     hash *= fnv_prime;
   }
 
-  char hexdigest[64 * 2];
   for (unsigned int i = 0; i < 128; i++) {
     hexdigest[127 - i] = nibble2hex(static_cast<unsigned char>(hash) & 0xf);
     hash >>= 4;
@@ -96,6 +154,7 @@ fnv1a(const char* data, size_t len) {
   return hexdigest;//128
 }
 
+/*
 static PyMethodDef fnv512_methods[] = {
      {"fnv0", fnv0, METH_VARARGS, "hash function fnv-0"},
      {"fnv1", fnv1, METH_VARARGS, "hash function fnv-1"},
@@ -116,3 +175,4 @@ PyMODINIT_FUNC
 PyInit_fnv512(void) {
      return PyModule_Create(&fnv512_module);
 }
+*/
