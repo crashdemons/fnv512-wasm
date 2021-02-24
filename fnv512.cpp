@@ -15,7 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #define PY_SSIZE_T_CLEAN
-#include <Python.h>
+//#include <Python.h>
 #include <boost/multiprecision/cpp_int.hpp>
 #include <iostream>
 
@@ -32,12 +32,7 @@ char nibble2hex(unsigned char nibble) {
 }
 
 static PyObject*
-fnv0(PyObject *self, PyObject *args) {
-  const char* data;
-  Py_ssize_t len;
-
-  if (!PyArg_ParseTuple(args, "s#", &data, &len))
-    return NULL;
+fnv0(const char* data, size_t len) {
 
   // implementation : https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-0_hash_(deprecated)
   uint512_t hash = 0;
@@ -59,12 +54,7 @@ fnv0(PyObject *self, PyObject *args) {
   return Py_BuildValue("s#", hexdigest, 128);
 }
 static PyObject*
-fnv1(PyObject *self, PyObject *args) {
-  const char* data;
-  Py_ssize_t len;
-
-  if (!PyArg_ParseTuple(args, "s#", &data, &len))
-    return NULL;
+fnv1(const char* data, size_t len) {
 
   // implementation : https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1_hash
   uint512_t hash = 0xb86db0b1171f4416dca1e50f309990acac87d059c90000000000000000000d21e948f68a34c192f62ea79bc942dbe7ce182036415f56e34bac982aac4afe9fd9_cppui512;
@@ -86,12 +76,7 @@ fnv1(PyObject *self, PyObject *args) {
   return Py_BuildValue("s#", hexdigest, 128);
 }
 static PyObject*
-fnv1a(PyObject *self, PyObject *args) {
-  const char* data;
-  Py_ssize_t len;
-
-  if (!PyArg_ParseTuple(args, "s#", &data, &len))
-    return NULL;
+fnv1a(const char* data, size_t len) {
 
   // implementation : https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1a_hash
   uint512_t hash = 0xb86db0b1171f4416dca1e50f309990acac87d059c90000000000000000000d21e948f68a34c192f62ea79bc942dbe7ce182036415f56e34bac982aac4afe9fd9_cppui512;
