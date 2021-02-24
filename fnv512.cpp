@@ -31,7 +31,7 @@ char nibble2hex(unsigned char nibble) {
     return 'a' + nibble - 10;
 }
 
-static PyObject*
+const char*
 fnv0(const char* data, size_t len) {
 
   // implementation : https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-0_hash_(deprecated)
@@ -51,9 +51,9 @@ fnv0(const char* data, size_t len) {
     hash >>= 4;
   }
 
-  return Py_BuildValue("s#", hexdigest, 128);
+  return hexdigest;//128
 }
-static PyObject*
+const char*
 fnv1(const char* data, size_t len) {
 
   // implementation : https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1_hash
@@ -72,10 +72,9 @@ fnv1(const char* data, size_t len) {
     hexdigest[127 - i] = nibble2hex(static_cast<unsigned char>(hash) & 0xf);
     hash >>= 4;
   }
-
-  return Py_BuildValue("s#", hexdigest, 128);
+  return hexdigest;//128
 }
-static PyObject*
+const char*
 fnv1a(const char* data, size_t len) {
 
   // implementation : https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1a_hash
@@ -94,8 +93,7 @@ fnv1a(const char* data, size_t len) {
     hexdigest[127 - i] = nibble2hex(static_cast<unsigned char>(hash) & 0xf);
     hash >>= 4;
   }
-
-  return Py_BuildValue("s#", hexdigest, 128);
+  return hexdigest;//128
 }
 
 static PyMethodDef fnv512_methods[] = {
