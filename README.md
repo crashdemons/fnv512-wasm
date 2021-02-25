@@ -1,7 +1,7 @@
 # fnv512
 
-fnv512 is a Python implementation for the FNV-0/FNV-1/FNV-1A 512 bits hashing algorithms
-This has been rebuilt for WebAssembly (WASM).
+fnv512 is an implementation for the FNV-0/FNV-1/FNV-1A 512 bits hashing algorithms
+ which has been rebuilt for WebAssembly (WASM).
 
 All credit goes to tweqx for this library
 
