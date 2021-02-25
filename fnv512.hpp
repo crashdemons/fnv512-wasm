@@ -22,10 +22,12 @@
 
 
 #include <boost/multiprecision/cpp_int.hpp>
+#include <boost/atomic/detail/bitwise_cast.hpp>
 #include <iostream>
 
 using namespace boost::multiprecision;
 using namespace boost::multiprecision::literals;
+using namespace boost::atomics::detail;
 
 #define FNV_VARIANT_0 0
 #define FNV_VARIANT_1 1
@@ -64,3 +66,4 @@ EMSCRIPTEN_KEEPALIVE
 void fnv512_final(fnv_context* ctx, char* hexdigest);
 
 
+const char* fnv0(const char* data, size_t len, char* hexdigest);

@@ -86,7 +86,7 @@ void fnv512_final(fnv_context* ctx, char* hexdigest){
    unsigned int hex_digest_len = ctx->digest_bytes * 2;
    unsigned int hex_digest_max = hex_digest_len - 1;
    for (unsigned int i = 0; i < hex_digest_len; i++) {
-    hexdigest[hex_digest_max - i] = nibble2hex(static_cast<unsigned char>(hash) & 0xf);
+    hexdigest[hex_digest_max - i] = nibble2hex(bitwise_cast<unsigned char>(hash) & 0xf);
     hash >>= 4;
   }
 }
@@ -107,7 +107,7 @@ fnv0(const char* data, size_t len, char* hexdigest) {//hexdigest should be 64*2 
   }
 
   for (unsigned int i = 0; i < 128; i++) {
-    hexdigest[127 - i] = nibble2hex(static_cast<unsigned char>(hash) & 0xf);
+    hexdigest[127 - i] = nibble2hex(bitwise_cast<unsigned char>(hash) & 0xf);
     hash >>= 4;
   }
 
@@ -128,7 +128,7 @@ fnv1(const char* data, size_t len, char* hexdigest) {
   }
 
   for (unsigned int i = 0; i < 128; i++) {
-    hexdigest[127 - i] = nibble2hex(static_cast<unsigned char>(hash) & 0xf);
+    hexdigest[127 - i] = nibble2hex(bitwise_cast<unsigned char>(hash) & 0xf);
     hash >>= 4;
   }
   return hexdigest;//128
@@ -148,7 +148,7 @@ fnv1a(const char* data, size_t len, char* hexdigest) {
   }
 
   for (unsigned int i = 0; i < 128; i++) {
-    hexdigest[127 - i] = nibble2hex(static_cast<unsigned char>(hash) & 0xf);
+    hexdigest[127 - i] = nibble2hex(bitwise_cast<unsigned char>(hash) & 0xf);
     hash >>= 4;
   }
   return hexdigest;//128
