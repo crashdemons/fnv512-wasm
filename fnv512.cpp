@@ -19,6 +19,11 @@
 
 constexpr uint512_t fnv_prime = 0x00000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000157_cppui512;
 
+int version(){
+	return 20210224;
+}
+
+
 char* create_buffer(size_t size){
 	return (char*) malloc(size);
 }
@@ -81,7 +86,34 @@ void fnv512_update(fnv_context* ctx, const char* data, size_t len){
   }
 }
 
-void fnv512_final(fnv_context* ctx, char* hexdigest){
+
+//author: Niels Keurentjes
+//https://stackoverflow.com/questions/17261798/converting-a-hex-string-to-a-byte-array
+int char2int(char input)
+{
+  if(input >= '0' && input <= '9')
+    return input - '0';
+  if(input >= 'A' && input <= 'F')
+    return input - 'A' + 10;
+  if(input >= 'a' && input <= 'f')
+    return input - 'a' + 10;
+  throw std::invalid_argument("Invalid input string");
+}
+void hex2bin(const char* src, char* target)
+{
+  while(*src && src[1])
+  {
+    *(target++) = char2int(*src)*16 + char2int(src[1]);
+    src += 2;
+  }
+}
+
+void fnv512_final(fnv_context* ctx, char* digest){
+   char hexdigest[129]; hexdigest[128]=0;//set null terminator for c-string
+   fnv512_finalHex(ctx, hexdigest);
+   hex2bin(hexdigest, digest);
+}
+void fnv512_finalHex(fnv_context* ctx, char* hexdigest){
    uint512_t hash = ctx->hash;//copy hash since we modify it - you could instead use directly since this *is* "final" but...
    unsigned int hex_digest_len = ctx->digest_bytes * 2;
    unsigned int hex_digest_max = hex_digest_len - 1;

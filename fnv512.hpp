@@ -46,6 +46,8 @@ typedef struct fnv_context{
 } fnv_context;
 
 
+EMSCRIPTEN_KEEPALIVE
+int version();
 
 EMSCRIPTEN_KEEPALIVE
 char* create_buffer(size_t size);
@@ -61,6 +63,9 @@ void fnv512_cleanup(fnv_context* ctx);
 
 EMSCRIPTEN_KEEPALIVE
 void fnv512_update(fnv_context* ctx, const char* data, size_t len);
+
+EMSCRIPTEN_KEEPALIVE
+void fnv512_finalHex(fnv_context* ctx, char* hexdigest);
 
 EMSCRIPTEN_KEEPALIVE
 void fnv512_final(fnv_context* ctx, char* hexdigest);
