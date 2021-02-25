@@ -1,28 +1,25 @@
 # fnv512
 
 fnv512 is a Python implementation for the FNV-0/FNV-1/FNV-1A 512 bits hashing algorithms
+This has been rebuilt for WebAssembly (WASM).
+
+All credit goes to tweqx for this library
 
 ## Installation
 
-To install, clone the repository and run :
-```bash
-python3 setup.py install
-```
+To install
+ - create a directory for the project
+ - clone the 1.62 branch of `chronotext-boost` (https://github.com/arielm/chronotext-boost/tree/1.62) into "chronotext-boost" directory inside the project directory (NOTE: if you do not switch to the 1.62 branch, you will receive errors about bitwise_cast later!)
+ - clone this respository into `fnv512-wasm` directory in the project directory (chronotext-boost should be accessible by ../chronotext-boost when the current directory is fnv512-wasm)
+ - change directory to `chronotext-boost` and follow the Setup and Build (only emscripten is needed) instructions on their repository. https://github.com/arielm/chronotext-boost/blob/1.62/README.md  This will build the Boost C++ library for webassembly.
+ - change directory to `fnv512-wasm` (../fnv512-wasm)
+ - run `./make-wasm.sh`
 
-You might need to use `sudo`.
+
 
 ## Usage
 
-```python
-import fnv512
-
-fnv512.fnv0(b'chongo <Landon Curt Noll> /\\../\\')
-# 'b86db0b1171f4416dca1e50f309990acac87d059c90000000000000000000d21e948f68a34c192f62ea79bc942dbe7ce182036415f56e34bac982aac4afe9fd9'
-fnv512.fnv1('foobar')
-# 'b0ec738d9c6fd969d05f0b35f6c0effd20209465290000004bf99f58ee4196afb9700e20110830fea5396b76280e47fd022b6e81331ca1a9cf6faf7123c3fc56'
-fnv512.fnv1a('foobar')
-# 'b0ec738d9c6fd969d05f0b35f6c0ed53adcacccd8e0000004bf99f58ee4196afb9700e20110830fea5396b76280e47fd022b6e81331ca1a9ced729c364be7788'
-```
+coming soon
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
