@@ -7,7 +7,7 @@ fnv512 is an implementation for the FNV-0/FNV-1/FNV-1A 512 bits hashing algorith
 
 All credit goes to tweqx for this library
 
-## Requirements
+## Build Requirements
  - emcc (Emscripten)
  - updated C++11 libraries/includes
  - curl (for downloading Boost in chronotext-boost)
