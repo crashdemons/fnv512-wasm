@@ -39,7 +39,7 @@ var fnv512 = {
        FNV_VARIANT_0: 0,
        FNV_VARIANT_1: 1,
        FNV_VARIANT_1A: 2
-    }
+    },
 
 
     /**
@@ -62,7 +62,7 @@ var fnv512 = {
         return {
             digest_size : digest_size,
 	    variant: variant,
-            context: this.internal.init(variant);
+            context: this.internal.init(variant)
         };
     },
     
