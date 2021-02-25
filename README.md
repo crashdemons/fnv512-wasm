@@ -13,7 +13,7 @@ All credit goes to tweqx for this library
  - curl (for downloading Boost in chronotext-boost)
  - EMSCRIPTEN_PATH environmental variable set to your EMSDK directory
 
-## Installation
+## Building the project yourself
 
 To install
  - create a directory for the project
