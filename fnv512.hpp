@@ -45,7 +45,7 @@ typedef struct fnv_context{
 	uint512_t hash;
 } fnv_context;
 
-
+extern "C" {
 EMSCRIPTEN_KEEPALIVE
 int version();
 
@@ -72,3 +72,4 @@ void fnv512_final(fnv_context* ctx, char* hexdigest);
 
 
 const char* fnv0(const char* data, size_t len, char* hexdigest);
+};

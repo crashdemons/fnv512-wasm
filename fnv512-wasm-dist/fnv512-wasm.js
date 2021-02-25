@@ -2017,34 +2017,34 @@ var asm = createWasm();
 var ___wasm_call_ctors = Module["___wasm_call_ctors"] = createExportWrapper("__wasm_call_ctors");
 
 /** @type {function(...*):?} */
-var __Z7versionv = Module["__Z7versionv"] = createExportWrapper("_Z7versionv");
+var _version = Module["_version"] = createExportWrapper("version");
 
 /** @type {function(...*):?} */
-var __Z13create_bufferm = Module["__Z13create_bufferm"] = createExportWrapper("_Z13create_bufferm");
+var _create_buffer = Module["_create_buffer"] = createExportWrapper("create_buffer");
 
 /** @type {function(...*):?} */
 var _malloc = Module["_malloc"] = createExportWrapper("malloc");
 
 /** @type {function(...*):?} */
-var __Z14destroy_bufferPv = Module["__Z14destroy_bufferPv"] = createExportWrapper("_Z14destroy_bufferPv");
+var _destroy_buffer = Module["_destroy_buffer"] = createExportWrapper("destroy_buffer");
 
 /** @type {function(...*):?} */
 var _free = Module["_free"] = createExportWrapper("free");
 
 /** @type {function(...*):?} */
-var __Z11fnv512_initi = Module["__Z11fnv512_initi"] = createExportWrapper("_Z11fnv512_initi");
+var _fnv512_init = Module["_fnv512_init"] = createExportWrapper("fnv512_init");
 
 /** @type {function(...*):?} */
-var __Z14fnv512_cleanupP11fnv_context = Module["__Z14fnv512_cleanupP11fnv_context"] = createExportWrapper("_Z14fnv512_cleanupP11fnv_context");
+var _fnv512_cleanup = Module["_fnv512_cleanup"] = createExportWrapper("fnv512_cleanup");
 
 /** @type {function(...*):?} */
-var __Z13fnv512_updateP11fnv_contextPKcm = Module["__Z13fnv512_updateP11fnv_contextPKcm"] = createExportWrapper("_Z13fnv512_updateP11fnv_contextPKcm");
+var _fnv512_update = Module["_fnv512_update"] = createExportWrapper("fnv512_update");
 
 /** @type {function(...*):?} */
-var __Z12fnv512_finalP11fnv_contextPc = Module["__Z12fnv512_finalP11fnv_contextPc"] = createExportWrapper("_Z12fnv512_finalP11fnv_contextPc");
+var _fnv512_final = Module["_fnv512_final"] = createExportWrapper("fnv512_final");
 
 /** @type {function(...*):?} */
-var __Z15fnv512_finalHexP11fnv_contextPc = Module["__Z15fnv512_finalHexP11fnv_contextPc"] = createExportWrapper("_Z15fnv512_finalHexP11fnv_contextPc");
+var _fnv512_finalHex = Module["_fnv512_finalHex"] = createExportWrapper("fnv512_finalHex");
 
 /** @type {function(...*):?} */
 var ___errno_location = Module["___errno_location"] = createExportWrapper("__errno_location");
