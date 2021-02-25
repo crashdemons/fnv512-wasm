@@ -2,6 +2,8 @@
 
 fnv512 is an implementation for the FNV-0/FNV-1/FNV-1A 512 bits hashing algorithms
  which has been rebuilt for WebAssembly (WASM).
+ 
+ Live demo: https://crashdemons.github.io/fnv512-wasm/
 
 All credit goes to tweqx for this library
 
