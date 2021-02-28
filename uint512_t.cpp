@@ -33,7 +33,9 @@ uint512_base uint512_max("ffffffffffffffffffffffffffffffffffffffffffffffffffffff
 			printf("dctor uint512_t %p\r\n",this);
 		}
                 void uint512_t::wrap512(){
+			printf("wrap512 uint512_t %p\r\n",this);
                         if(mpz_cmp(n,uint512_max.n) > 0){
+				printf("wrap512:overflow uint512_t %p\r\n",this);
 			//	printf("%s\r\n",mpz_get_str(NULL, 16, n));
 			//	printf("  > \r\n");
 			//	printf("%s\r\n",mpz_get_str(NULL, 16, uint512_max.n));
@@ -46,9 +48,10 @@ uint512_base uint512_max("ffffffffffffffffffffffffffffffffffffffffffffffffffffff
                         mpz_set_str(n,cs,base);
                 }
                 void uint512_t::mul(uint512_t u2){
-			printf("mul uint512_t %p\r\n",this);
+			printf("<<<<mul uint512_t %p\r\n",this);
                         mpz_mul(n, n, u2.n);
                         wrap512();
+			printf(">>>mul uint512_t %p\r\n",this);
                 }
                 void uint512_t::exor(unsigned long i){
 			printf("exor uint512_t %p\r\n",this);
