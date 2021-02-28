@@ -32,12 +32,14 @@
 #define FNV_VARIANT_DEFAULT 2
 
 
-typedef struct fnv_context{
+class fnv_context{
+	public:
 	int variant;
 	int digest_bits;
 	int digest_bytes;
 	uint512_t hash;
-} fnv_context;
+	fnv_context();
+};
 
 extern "C" {
 EMSCRIPTEN_KEEPALIVE

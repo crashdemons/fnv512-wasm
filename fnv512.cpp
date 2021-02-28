@@ -16,6 +16,10 @@
 
 #include "fnv512.hpp"
 
+fnv_context::fnv_context(){
+	//hash = uint512_t("0",10);
+}
+
 
 const uint512_t fnv_prime("00000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000157",16);
 
@@ -42,7 +46,7 @@ char nibble2hex(unsigned char nibble) {
 
 
 fnv_context* fnv512_init(int variant){
-	fnv_context* ctx = (fnv_context*) create_buffer(sizeof(fnv_context));
+	fnv_context* ctx = new fnv_context();//(fnv_context*) create_buffer(sizeof(fnv_context));
 	ctx->digest_bits = 512;
 	ctx->digest_bytes = 64;
 
@@ -64,7 +68,8 @@ fnv_context* fnv512_init(int variant){
 }
 
 void fnv512_cleanup(fnv_context* ctx){
-	destroy_buffer(ctx);
+	delete ctx;
+	//destroy_buffer(ctx);
 }
 
 void fnv512_update(fnv_context* ctx, const char* data, size_t len){
