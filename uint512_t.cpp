@@ -29,6 +29,9 @@ uint512_base uint512_max("ffffffffffffffffffffffffffffffffffffffffffffffffffffff
                 uint512_t::uint512_t() : uint512_base() {
 			printf("ctor0 uint512_t %p\r\n",this);
 		}
+                uint512_t::~uint512_t() {
+			printf("dctor uint512_t %p\r\n",this);
+		}
                 void uint512_t::wrap512(){
                         if(mpz_cmp(n,uint512_max.n) > 0){
 			//	printf("%s\r\n",mpz_get_str(NULL, 16, n));
@@ -43,10 +46,12 @@ uint512_base uint512_max("ffffffffffffffffffffffffffffffffffffffffffffffffffffff
                         mpz_set_str(n,cs,base);
                 }
                 void uint512_t::mul(uint512_t u2){
+			printf("mul uint512_t %p\r\n",this);
                         mpz_mul(n, n, u2.n);
                         wrap512();
                 }
                 void uint512_t::exor(unsigned long i){
+			printf("exor uint512_t %p\r\n",this);
                         mpz_t n2;
                         mpz_init_set_ui(n2,i);
                         mpz_xor(n, n, n2);
@@ -54,13 +59,16 @@ uint512_base uint512_max("ffffffffffffffffffffffffffffffffffffffffffffffffffffff
                         wrap512();
                 }
                 unsigned long int uint512_t::getLowInt(){
+			printf("getLowInt uint512_t %p\r\n",this);
                         return mpz_get_ui(n);
                 }
 
                 size_t uint512_t::getHexBufSize(){
+			printf("getHexSize uint512_t %p\r\n",this);
                         return mpz_sizeinbase(n, 16)+2;
                 }
                 void uint512_t::toHex(char* buf){
+			printf("toHex uint512_t %p\r\n",this);
                         mpz_get_str(buf, 16, n);
                 }
 
