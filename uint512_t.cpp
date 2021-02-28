@@ -1,19 +1,22 @@
 #include "uint512_t.hpp"
 
                 uint512_base::uint512_base(){
+			printf("ctor0 uint512_base %p\r\n",this);
                         mpz_init2(n,512);
                 }
                 uint512_base::uint512_base(const char* cs, int base, int size){
+			printf("ctor3 uint512_base %p\r\n",this);
                         mpz_init2(n,size);
                         mpz_set_str(n,cs,base);
                 }
                 uint512_base::uint512_base(const char* cs, int base){
+			printf("ctor2 uint512_base %p\r\n",this);
                         mpz_init2(n,512);
                         mpz_set_str(n,cs,base);
                 }
 
                 uint512_base::~uint512_base(){
-			printf("dctor uint512_base\r\n");
+			printf("dctor uint512_base %p\r\n",this);
                         mpz_clear(n);
                 }
 
@@ -31,6 +34,7 @@ uint512_base uint512_max("ffffffffffffffffffffffffffffffffffffffffffffffffffffff
                         }
                 }
                 void uint512_t::set(const char* cs, int base){
+			printf("set uint512_base %p = %s\r\n",this,cs);
                         mpz_set_str(n,cs,base);
                 }
                 void uint512_t::mul(uint512_t u2){
