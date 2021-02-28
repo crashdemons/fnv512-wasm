@@ -17,7 +17,8 @@
 #include "fnv512.hpp"
 
 
-constexpr uint512_t fnv_prime = 0x00000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000157_cppui512;
+const uint512_t fnv_prime("00000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000157",16);
+
 
 int version(){
 	return 20210224;
@@ -50,12 +51,12 @@ fnv_context* fnv512_init(int variant){
 
 	switch(variant){
 		case FNV_VARIANT_0:
-			ctx->hash = 0;
+			ctx->hash.set("0",10);
 			break;
 		case FNV_VARIANT_1:
 		case FNV_VARIANT_1A:
 		default:
-  			ctx->hash = 0xb86db0b1171f4416dca1e50f309990acac87d059c90000000000000000000d21e948f68a34c192f62ea79bc942dbe7ce182036415f56e34bac982aac4afe9fd9_cppui512;
+  			ctx->hash.set("b86db0b1171f4416dca1e50f309990acac87d059c90000000000000000000d21e948f68a34c192f62ea79bc942dbe7ce182036415f56e34bac982aac4afe9fd9",16);
 			break;
 	}
 
@@ -70,18 +71,18 @@ void fnv512_update(fnv_context* ctx, const char* data, size_t len){
   if(ctx->variant==FNV_VARIANT_1A){
 	  for (size_t i = 0; i < len; i++) {
   	  // xor with a byte of data
-    	ctx->hash ^= data[i];
+	ctx->hash.exor(data[i]);
 
     	// multiplication by 2^344 + 2^8 + 0x57
-    	ctx->hash *= fnv_prime;
+	ctx->hash.mul(fnv_prime);
   	}
   }else{
   	for (size_t i = 0; i < len; i++) {
     	// multiplication by 2^344 + 2^8 + 0x57
-    	ctx->hash *= fnv_prime;
+	ctx->hash.mul(fnv_prime);
 
     	// xor with a byte of data
-    	ctx->hash ^= data[i];
+	ctx->hash.exor(data[i]);
   	}
   }
 }
@@ -114,97 +115,13 @@ void fnv512_final(fnv_context* ctx, char* digest){
    hex2bin(hexdigest, digest);
 }
 void fnv512_finalHex(fnv_context* ctx, char* hexdigest){
-   uint512_t hash = ctx->hash;//copy hash since we modify it - you could instead use directly since this *is* "final" but...
+   ctx->hash.toHex(hexdigest);
+   /*uint512_t hash = ctx->hash;//copy hash since we modify it - you could instead use directly since this *is* "final" but...
    unsigned int hex_digest_len = ctx->digest_bytes * 2;
    unsigned int hex_digest_max = hex_digest_len - 1;
    for (unsigned int i = 0; i < hex_digest_len; i++) {
     hexdigest[hex_digest_max - i] = nibble2hex(bitwise_cast<unsigned char>(hash) & 0xf);
     hash >>= 4;
-  }
+  }*/
 }
 
-
-const char*
-fnv0(const char* data, size_t len, char* hexdigest) {//hexdigest should be 64*2 chars long
-
-  // implementation : https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-0_hash_(deprecated)
-  uint512_t hash = 0;
-
-  for (size_t i = 0; i < len; i++) {
-    // multiplication by 2^344 + 2^8 + 0x57
-    hash *= fnv_prime;
-
-    // xor with a byte of data
-    hash ^= data[i];
-  }
-
-  for (unsigned int i = 0; i < 128; i++) {
-    hexdigest[127 - i] = nibble2hex(bitwise_cast<unsigned char>(hash) & 0xf);
-    hash >>= 4;
-  }
-
-  return hexdigest;//128
-}
-const char*
-fnv1(const char* data, size_t len, char* hexdigest) {
-
-  // implementation : https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1_hash
-  uint512_t hash = 0xb86db0b1171f4416dca1e50f309990acac87d059c90000000000000000000d21e948f68a34c192f62ea79bc942dbe7ce182036415f56e34bac982aac4afe9fd9_cppui512;
-
-  for (size_t i = 0; i < len; i++) {
-    // multiplication by 2^344 + 2^8 + 0x57
-    hash *= fnv_prime;
-
-    // xor with a byte of data
-    hash ^= data[i];
-  }
-
-  for (unsigned int i = 0; i < 128; i++) {
-    hexdigest[127 - i] = nibble2hex(bitwise_cast<unsigned char>(hash) & 0xf);
-    hash >>= 4;
-  }
-  return hexdigest;//128
-}
-const char*
-fnv1a(const char* data, size_t len, char* hexdigest) {
-
-  // implementation : https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1a_hash
-  uint512_t hash = 0xb86db0b1171f4416dca1e50f309990acac87d059c90000000000000000000d21e948f68a34c192f62ea79bc942dbe7ce182036415f56e34bac982aac4afe9fd9_cppui512;
-
-  for (size_t i = 0; i < len; i++) {
-    // xor with a byte of data
-    hash ^= data[i];
-
-    // multiplication by 2^344 + 2^8 + 0x57
-    hash *= fnv_prime;
-  }
-
-  for (unsigned int i = 0; i < 128; i++) {
-    hexdigest[127 - i] = nibble2hex(bitwise_cast<unsigned char>(hash) & 0xf);
-    hash >>= 4;
-  }
-  return hexdigest;//128
-}
-
-/*
-static PyMethodDef fnv512_methods[] = {
-     {"fnv0", fnv0, METH_VARARGS, "hash function fnv-0"},
-     {"fnv1", fnv1, METH_VARARGS, "hash function fnv-1"},
-     {"fnv1a", fnv1a, METH_VARARGS, "hash function fnv-1a"},
-     {NULL, NULL, 0, NULL}
-};
-
-static struct PyModuleDef fnv512_module =
-{
-    PyModuleDef_HEAD_INIT,
-    "fnv512",
-    NULL,
-    -1,
-    fnv512_methods
-};
-
-PyMODINIT_FUNC
-PyInit_fnv512(void) {
-     return PyModule_Create(&fnv512_module);
-}
-*/
