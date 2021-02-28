@@ -8,7 +8,7 @@ class uint512_base{
                 uint512_base();
                 uint512_base(const char* cs, int base, int size);
                 uint512_base(const char* cs, int base);
-                ~uint512_base();
+                virtual ~uint512_base();
 };
 
 extern uint512_base uint512_max;
@@ -17,7 +17,7 @@ class uint512_t : uint512_base{
         public:
                 uint512_t(const char* cs, int base);
                 uint512_t();
-                ~uint512_t();
+                virtual ~uint512_t();
                 void wrap512();
                 void set(const char* cs, int base);
                 void mul(const uint512_t* u2);
