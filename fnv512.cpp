@@ -52,6 +52,7 @@ char nibble2hex(unsigned char nibble) {
 
 fnv_context* fnv512_init(int variant){
 	fnv_context* ctx = new fnv_context();//(fnv_context*) create_buffer(sizeof(fnv_context));
+    printf("fnv_init %p",ctx);
 	ctx->digest_bits = 512;
 	ctx->digest_bytes = 64;
 
@@ -73,6 +74,7 @@ fnv_context* fnv512_init(int variant){
 }
 
 void fnv512_cleanup(fnv_context* ctx){
+    printf("fnv_cleanup %p",ctx);
 	delete ctx;
 	//destroy_buffer(ctx);
 }
