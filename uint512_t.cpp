@@ -13,6 +13,7 @@
                 }
 
                 uint512_base::~uint512_base(){
+			printf("dctor uint512_base\r\n");
                         mpz_clear(n);
                 }
 
@@ -22,9 +23,9 @@ uint512_base uint512_max("ffffffffffffffffffffffffffffffffffffffffffffffffffffff
                 uint512_t::uint512_t() : uint512_base() {}
                 void uint512_t::wrap512(){
                         if(mpz_cmp(n,uint512_max.n) > 0){
-				printf("%s\r\n",mpz_get_str(NULL, 16, n));
-				printf("  > \r\n");
-				printf("%s\r\n",mpz_get_str(NULL, 16, uint512_max.n));
+			//	printf("%s\r\n",mpz_get_str(NULL, 16, n));
+			//	printf("  > \r\n");
+			//	printf("%s\r\n",mpz_get_str(NULL, 16, uint512_max.n));
 
                                 mpz_sub(n,n,uint512_max.n);
                         }
