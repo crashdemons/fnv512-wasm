@@ -17,6 +17,11 @@
 #include "fnv512.hpp"
 
 fnv_context::fnv_context(){
+    printf("ctor fnv_context");
+	//hash = uint512_t("0",10);
+}
+fnv_context::~fnv_context(){
+    printf("dctor fnv_context");
 	//hash = uint512_t("0",10);
 }
 

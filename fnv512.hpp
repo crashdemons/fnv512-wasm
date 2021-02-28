@@ -39,6 +39,7 @@ class fnv_context{
 	int digest_bytes;
 	uint512_t hash;
 	fnv_context();
+	~fnv_context();
 };
 
 extern "C" {
