@@ -22,8 +22,13 @@
 
 uint512_base uint512_max("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",16);
 
-                uint512_t::uint512_t(const char* cs, int base) : uint512_base(cs,base){}
-                uint512_t::uint512_t() : uint512_base() {}
+                uint512_t::uint512_t(const char* cs, int base) : uint512_base(cs,base){
+			printf("ctor2 uint512_t %p = %s\r\n",this, cs);
+
+		}
+                uint512_t::uint512_t() : uint512_base() {
+			printf("ctor0 uint512_t %p\r\n",this);
+		}
                 void uint512_t::wrap512(){
                         if(mpz_cmp(n,uint512_max.n) > 0){
 			//	printf("%s\r\n",mpz_get_str(NULL, 16, n));
@@ -34,7 +39,7 @@ uint512_base uint512_max("ffffffffffffffffffffffffffffffffffffffffffffffffffffff
                         }
                 }
                 void uint512_t::set(const char* cs, int base){
-			printf("set uint512_base %p = %s\r\n",this,cs);
+			printf("set uint512_t %p = %s\r\n",this,cs);
                         mpz_set_str(n,cs,base);
                 }
                 void uint512_t::mul(uint512_t u2){
