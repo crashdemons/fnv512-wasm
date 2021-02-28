@@ -100,19 +100,26 @@ int char2int(char input)
     return input - 'a' + 10;
   throw std::invalid_argument("Invalid input string");
 }
-void hex2bin(const char* src, char* target)
+void hex2bin(const char* src, char* target, int maxBytes)
 {
-  while(*src && src[1])
+  int i=0;
+  while(*src && src[1] && i<maxBytes)
   {
     *(target++) = char2int(*src)*16 + char2int(src[1]);
     src += 2;
+    i++;
   }
 }
 
 void fnv512_final(fnv_context* ctx, char* digest){
-   char hexdigest[129]; hexdigest[128]=0;//set null terminator for c-string
+   size_t hexSize = ctx->hash.getHexBufSize();
+   char* hexdigest = create_buffer(hexSize);
+
    fnv512_finalHex(ctx, hexdigest);
-   hex2bin(hexdigest, digest);
+   hex2bin(hexdigest, digest, ctx->digest_bytes);
+
+   destroy_buffer(hexdigest);
+
 }
 void fnv512_finalHex(fnv_context* ctx, char* hexdigest){
    ctx->hash.toHex(hexdigest);
