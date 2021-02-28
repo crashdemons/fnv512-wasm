@@ -79,12 +79,12 @@ void fnv512_update(fnv_context* ctx, const char* data, size_t len){
 	ctx->hash.exor(data[i]);
 
     	// multiplication by 2^344 + 2^8 + 0x57
-	ctx->hash.mul(fnv_prime);
+	ctx->hash.mul(&fnv_prime);
   	}
   }else{
   	for (size_t i = 0; i < len; i++) {
     	// multiplication by 2^344 + 2^8 + 0x57
-	ctx->hash.mul(fnv_prime);
+	ctx->hash.mul(&fnv_prime);
 
     	// xor with a byte of data
 	ctx->hash.exor(data[i]);

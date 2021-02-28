@@ -47,9 +47,9 @@ uint512_base uint512_max("ffffffffffffffffffffffffffffffffffffffffffffffffffffff
 			printf("set uint512_t %p = %s\r\n",this,cs);
                         mpz_set_str(n,cs,base);
                 }
-                void uint512_t::mul(uint512_t u2){
+                void uint512_t::mul(const uint512_t* u2){
 			printf("<<<<mul uint512_t %p\r\n",this);
-                        mpz_mul(n, n, u2.n);
+                        mpz_mul(n, n, u2->n);
                         wrap512();
 			printf(">>>mul uint512_t %p\r\n",this);
                 }
