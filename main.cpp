@@ -1,10 +1,11 @@
 #include <iostream>
+#include <cstring>
 #include "fnv512.hpp"
 
 
 int main(){
 	const char* input = "chongo <Landon Curt Noll> /\\../\\";
-	char* output = create_buffer(129);
+	char* output = create_buffer(129+100);
 	output[128]=0;
 
 	fnv_context* ctx = fnv512_init(FNV_VARIANT_0);
@@ -15,8 +16,8 @@ int main(){
 
 	printf("output %s",output);
 
-	fnv0(input, strlen(input), output);
-	printf("output %s",output);
+//	fnv0(input, strlen(input), output);
+//	printf("output %s",output);
 
 	destroy_buffer(output);
 	fnv512_cleanup(ctx);
