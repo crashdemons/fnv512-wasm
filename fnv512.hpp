@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#pragma once
 #ifdef __EMSCRIPTEN__
 #include "emscripten.h"
 #else
@@ -21,13 +22,14 @@
 #endif
 
 
-#include <boost/multiprecision/cpp_int.hpp>
-#include <boost/atomic/detail/bitwise_cast.hpp>
+//#include <boost/multiprecision/cpp_int.hpp>
+//#include <boost/atomic/detail/bitwise_cast.hpp>
+#include "uint512_llvm.hpp"
 #include <iostream>
 
-using namespace boost::multiprecision;
-using namespace boost::multiprecision::literals;
-using namespace boost::atomics::detail;
+//using namespace boost::multiprecision;
+//using namespace boost::multiprecision::literals;
+//using namespace boost::atomics::detail;
 
 #define FNV_VARIANT_0 0
 #define FNV_VARIANT_1 1
@@ -68,8 +70,7 @@ EMSCRIPTEN_KEEPALIVE
 void fnv512_finalHex(fnv_context* ctx, char* hexdigest);
 
 EMSCRIPTEN_KEEPALIVE
-void fnv512_final(fnv_context* ctx, char* hexdigest);
+void fnv512_final(fnv_context* ctx, char* digest);
 
 
-const char* fnv0(const char* data, size_t len, char* hexdigest);
 };
