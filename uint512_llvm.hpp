@@ -69,8 +69,13 @@ U512_INLINE uint512_u uint512_u_be(uint512_t u512){
 	return value_be;
 }
 
+void uint512_debug_(const char* prefix, const uint512_t& u512);
 
+#ifdef NDEBUG
+#define uint512_debug(a,b) ;
+#else
+#define uint512_debug(a,b) uint512_debug_(a,b);
+#endif
 
-void uint512_debug(const char* prefix, const uint512_t& u512);
 
 }

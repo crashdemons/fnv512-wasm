@@ -70,7 +70,7 @@ EMSCRIPTEN_KEEPALIVE
 void fnv512_finalHex(fnv_context* ctx, char* hexdigest);
 
 EMSCRIPTEN_KEEPALIVE
-void fnv512_final(fnv_context* ctx, char* hexdigest);
+void fnv512_final(fnv_context* ctx, char* digest);
 
 
 };

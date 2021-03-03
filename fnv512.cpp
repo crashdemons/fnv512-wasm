@@ -129,19 +129,11 @@ void hex2bin(const char* src, char* target)
 }
 
 void fnv512_final(fnv_context* ctx, char* digest){
-   char hexdigest[129]; hexdigest[128]=0;//set null terminator for c-string
-   fnv512_finalHex(ctx, hexdigest);
-   hex2bin(hexdigest, digest);
+   uint512_u hash_be = uint512_u_be(ctx->hash);
+   uint512_debug("final hash be", hash_be.u512);
+   for(unsigned int i=0; i< ctx->digest_bytes; i++) digest[i]=hash_be.u8[i];
 }
 void fnv512_finalHex(fnv_context* ctx, char* hexdigest){
-   uint512_u hash;
-   hash.u512 = ctx->hash;//copy hash since we modify it - you could instead use directly since this *is* "final" but...
- 
-  unsigned int hex_digest_len = ctx->digest_bytes * 2;
-   unsigned int hex_digest_max = hex_digest_len - 1;
-
-
-   uint512_debug("final hash", ctx->hash);
    uint512_u hash_be = uint512_u_be(ctx->hash);
    uint512_debug("final hash be", hash_be.u512);
 
@@ -150,17 +142,7 @@ void fnv512_finalHex(fnv_context* ctx, char* hexdigest){
 	int lo = hash_be.u8[i]&0x0F;
         hexdigest[h++]=nibble2hex(hi);
 	hexdigest[h++]=nibble2hex(lo);
-	std::cout<<nibble2hex(hi)<<nibble2hex(lo)<<std::endl;
    }
-/*
-
-   for (unsigned int i = 0; i < hex_digest_len; i++) {
-    uint8_t lobyte = hash.u8[7] & 0x0F;//0?
-    const char* lochar = (const char*) (&lobyte);
-    std::cout<<(int) lobyte<<std::endl;
-    hexdigest[hex_digest_max - i] = nibble2hex( *lochar );
-    hash.u512 >>= 4;
-  }*/
 }
 
 

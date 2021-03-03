@@ -16,8 +16,7 @@ bool uint512_littleendian()
     return isLittleEndian;
 }
 
-
-void uint512_debug(const char* prefix, const uint512_t& u512){
+void uint512_debug_(const char* prefix, const uint512_t& u512){
         uint512_u hash_convert;
         hash_convert.u512 = u512;
 
@@ -30,5 +29,4 @@ void uint512_debug(const char* prefix, const uint512_t& u512){
         for(int i=0;i<64;i++) std::cout<< (unsigned int) hash_convert.u8[i] <<" ";
         std::cout<<"]"<<std::endl;
 }
-
 

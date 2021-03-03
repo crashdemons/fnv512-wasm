@@ -1,6 +1,6 @@
-CC=clang
 CXX=clang++
 CFLAGS=-I. -g -O0 -Wall -lstdc++
+CFLAGS=-I. -O3 -Wall -lstdc++ -DNDEBUG
 
 DEPS=fnv512.h
 
