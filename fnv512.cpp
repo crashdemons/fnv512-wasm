@@ -54,6 +54,11 @@ char nibble2hex(unsigned char nibble) {
 
 
 fnv_context* fnv512_init(int variant){
+
+   uint512_debug("init fnv_prime", fnv_prime);
+   uint512_debug("init fnv_offset_basis", fnv_offset_basis);
+
+
 	fnv_context* ctx = (fnv_context*) create_buffer(sizeof(fnv_context));
 	ctx->digest_bits = 512;
 	ctx->digest_bytes = 64;
@@ -71,6 +76,8 @@ fnv_context* fnv512_init(int variant){
   			ctx->hash = fnv_offset_basis;
 			break;
 	}
+
+   uint512_debug("init hash", ctx->hash);
 
 	return ctx;
 }
@@ -127,17 +134,31 @@ void fnv512_final(fnv_context* ctx, char* digest){
    hex2bin(hexdigest, digest);
 }
 void fnv512_finalHex(fnv_context* ctx, char* hexdigest){
-   uint512_t hash = ctx->hash;//copy hash since we modify it - you could instead use directly since this *is* "final" but...
-   unsigned int hex_digest_len = ctx->digest_bytes * 2;
+   uint512_u hash;
+   hash.u512 = ctx->hash;//copy hash since we modify it - you could instead use directly since this *is* "final" but...
+ 
+  unsigned int hex_digest_len = ctx->digest_bytes * 2;
    unsigned int hex_digest_max = hex_digest_len - 1;
 
-   uint512_t lowbytemask = (uint512_t) 0xff;
+
+   uint512_debug("final hash", ctx->hash);
+   uint512_u hash_be = uint512_u_be(ctx->hash);
+   uint512_debug("final hash be", hash_be.u512);
+
+   for(unsigned int i = 0; i < ctx->digest_bytes; i++){
+	int hi = (hash.u8[i]&0xF0) >> 4;
+	int lo = hash.u8[i]&0x0F;
+	std::cout<<nibble2hex(hi)<<nibble2hex(lo)<<std::endl;
+   }
+/*
+
    for (unsigned int i = 0; i < hex_digest_len; i++) {
-    uint8_t lobyte = (uint8_t) (hash&lowbytemask);
-    const char* charBits = (const char*) &lobyte;
-    hexdigest[hex_digest_max - i] = nibble2hex( *charBits );
-    hash >>= 4;
-  }
+    uint8_t lobyte = hash.u8[7] & 0x0F;//0?
+    const char* lochar = (const char*) (&lobyte);
+    std::cout<<(int) lobyte<<std::endl;
+    hexdigest[hex_digest_max - i] = nibble2hex( *lochar );
+    hash.u512 >>= 4;
+  }*/
 }
 
 

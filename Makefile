@@ -7,11 +7,13 @@ DEPS=fnv512.h
 all: test
 
 test: fnv512.o
-	$(CXX) $(CFLAGS) -o test fnv512.o main.cpp
+	$(CXX) $(CFLAGS) -o test uint512_llvm.o fnv512.o main.cpp
 
-fnv512.o: fnv512.cpp fnv512.hpp uint512_llvm.hpp
-	$(CXX) $(CFLAGS) fnv512.cpp -c
+fnv512.o: fnv512.cpp fnv512.hpp uint512_llvm.o
+	$(CXX) $(CFLAGS) -o fnv512.o uint512_llvm.o fnv512.cpp -c
 
+uint512_llvm.o: uint512_llvm.hpp uint512_llvm.cpp
+	$(CXX) $(CFLAGS) uint512_llvm.cpp -c
 
 .PHONY: clean
 
