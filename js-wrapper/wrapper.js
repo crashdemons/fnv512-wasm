@@ -125,7 +125,7 @@ var fnv512 = {
         var ctx = this.init(digest_size,variant);
         this.update(ctx,input);
         var bytes = this.final(ctx);
-        this.cleanup(input);
+        this.cleanup(ctx);
         return bytes;
     },
     
