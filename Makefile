@@ -1,13 +1,16 @@
-CC=g++
-CFLAGS=-I.
+CC=clang
+CXX=clang++
+CFLAGS=-I. -g -O0 -Wall -lstdc++
 
-all: library test
+DEPS=fnv512.h
 
-library: fnv512.o
-	$(CC) -o fnv512.o fnv512.cpp -c
+all: test
 
 test: fnv512.o
-	$(CC) -o test fnv512.o main.cpp
+	$(CXX) $(CFLAGS) -o test fnv512.o main.cpp
+
+fnv512.o: fnv512.cpp fnv512.hpp uint512_llvm.hpp
+	$(CXX) $(CFLAGS) fnv512.cpp -c
 
 
 .PHONY: clean
