@@ -145,9 +145,11 @@ void fnv512_finalHex(fnv_context* ctx, char* hexdigest){
    uint512_u hash_be = uint512_u_be(ctx->hash);
    uint512_debug("final hash be", hash_be.u512);
 
-   for(unsigned int i = 0; i < ctx->digest_bytes; i++){
-	int hi = (hash.u8[i]&0xF0) >> 4;
-	int lo = hash.u8[i]&0x0F;
+   for(unsigned int i = 0,h=0; i < ctx->digest_bytes; i++){
+	int hi = (hash_be.u8[i]&0xF0) >> 4;
+	int lo = hash_be.u8[i]&0x0F;
+        hexdigest[h++]=nibble2hex(hi);
+	hexdigest[h++]=nibble2hex(lo);
 	std::cout<<nibble2hex(hi)<<nibble2hex(lo)<<std::endl;
    }
 /*
