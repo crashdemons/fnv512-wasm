@@ -17,7 +17,20 @@
 #include "fnv512.hpp"
 
 
-constexpr uint512_t fnv_prime = 0x00000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000157_cppui512;
+constexpr uint512_t fnv_prime = uint512(
+	0x0000000000000000ull, 0x0000000000000000ull,
+	0x0000000001000000ull, 0x0000000000000000ull,
+	0x0000000000000000ull, 0x0000000000000000ull,
+	0x0000000000000000ull, 0x0000000000000157ull
+);
+
+constexpr uint512_t fnv_offset_basis = uint512(
+	0xB86DB0B1171F4416ull, 0xDCA1E50F309990ACull,
+	0xAC87D059C9000000ull, 0x0000000000000D21ull,
+	0xE948F68A34C192F6ull, 0x2EA79BC942DBE7CEull,
+	0x182036415F56E34Bull, 0xAC982AAC4AFE9FD9ull
+);
+
 
 int version(){
 	return 20210224;
@@ -55,7 +68,7 @@ fnv_context* fnv512_init(int variant){
 		case FNV_VARIANT_1:
 		case FNV_VARIANT_1A:
 		default:
-  			ctx->hash = 0xb86db0b1171f4416dca1e50f309990acac87d059c90000000000000000000d21e948f68a34c192f62ea79bc942dbe7ce182036415f56e34bac982aac4afe9fd9_cppui512;
+  			ctx->hash = fnv_offset_basis;
 			break;
 	}
 
@@ -70,7 +83,7 @@ void fnv512_update(fnv_context* ctx, const char* data, size_t len){
   if(ctx->variant==FNV_VARIANT_1A){
 	  for (size_t i = 0; i < len; i++) {
   	  // xor with a byte of data
-    	ctx->hash ^= data[i];
+    	ctx->hash ^= (uint512_t) data[i];
 
     	// multiplication by 2^344 + 2^8 + 0x57
     	ctx->hash *= fnv_prime;
@@ -81,7 +94,7 @@ void fnv512_update(fnv_context* ctx, const char* data, size_t len){
     	ctx->hash *= fnv_prime;
 
     	// xor with a byte of data
-    	ctx->hash ^= data[i];
+    	ctx->hash ^= (uint512_t) data[i];
   	}
   }
 }
@@ -89,7 +102,7 @@ void fnv512_update(fnv_context* ctx, const char* data, size_t len){
 
 //author: Niels Keurentjes
 //https://stackoverflow.com/questions/17261798/converting-a-hex-string-to-a-byte-array
-int char2int(char input)
+int char2int(const char input)
 {
   if(input >= '0' && input <= '9')
     return input - '0';
@@ -117,94 +130,14 @@ void fnv512_finalHex(fnv_context* ctx, char* hexdigest){
    uint512_t hash = ctx->hash;//copy hash since we modify it - you could instead use directly since this *is* "final" but...
    unsigned int hex_digest_len = ctx->digest_bytes * 2;
    unsigned int hex_digest_max = hex_digest_len - 1;
+
+   uint512_t lowbytemask = (uint512_t) 0xff;
    for (unsigned int i = 0; i < hex_digest_len; i++) {
-    hexdigest[hex_digest_max - i] = nibble2hex(bitwise_cast<unsigned char>(hash) & 0xf);
+    uint8_t lobyte = (uint8_t) (hash&lowbytemask);
+    const char* charBits = (const char*) &lobyte;
+    hexdigest[hex_digest_max - i] = nibble2hex( *charBits );
     hash >>= 4;
   }
 }
 
 
-const char*
-fnv0(const char* data, size_t len, char* hexdigest) {//hexdigest should be 64*2 chars long
-
-  // implementation : https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-0_hash_(deprecated)
-  uint512_t hash = 0;
-
-  for (size_t i = 0; i < len; i++) {
-    // multiplication by 2^344 + 2^8 + 0x57
-    hash *= fnv_prime;
-
-    // xor with a byte of data
-    hash ^= data[i];
-  }
-
-  for (unsigned int i = 0; i < 128; i++) {
-    hexdigest[127 - i] = nibble2hex(bitwise_cast<unsigned char>(hash) & 0xf);
-    hash >>= 4;
-  }
-
-  return hexdigest;//128
-}
-const char*
-fnv1(const char* data, size_t len, char* hexdigest) {
-
-  // implementation : https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1_hash
-  uint512_t hash = 0xb86db0b1171f4416dca1e50f309990acac87d059c90000000000000000000d21e948f68a34c192f62ea79bc942dbe7ce182036415f56e34bac982aac4afe9fd9_cppui512;
-
-  for (size_t i = 0; i < len; i++) {
-    // multiplication by 2^344 + 2^8 + 0x57
-    hash *= fnv_prime;
-
-    // xor with a byte of data
-    hash ^= data[i];
-  }
-
-  for (unsigned int i = 0; i < 128; i++) {
-    hexdigest[127 - i] = nibble2hex(bitwise_cast<unsigned char>(hash) & 0xf);
-    hash >>= 4;
-  }
-  return hexdigest;//128
-}
-const char*
-fnv1a(const char* data, size_t len, char* hexdigest) {
-
-  // implementation : https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1a_hash
-  uint512_t hash = 0xb86db0b1171f4416dca1e50f309990acac87d059c90000000000000000000d21e948f68a34c192f62ea79bc942dbe7ce182036415f56e34bac982aac4afe9fd9_cppui512;
-
-  for (size_t i = 0; i < len; i++) {
-    // xor with a byte of data
-    hash ^= data[i];
-
-    // multiplication by 2^344 + 2^8 + 0x57
-    hash *= fnv_prime;
-  }
-
-  for (unsigned int i = 0; i < 128; i++) {
-    hexdigest[127 - i] = nibble2hex(bitwise_cast<unsigned char>(hash) & 0xf);
-    hash >>= 4;
-  }
-  return hexdigest;//128
-}
-
-/*
-static PyMethodDef fnv512_methods[] = {
-     {"fnv0", fnv0, METH_VARARGS, "hash function fnv-0"},
-     {"fnv1", fnv1, METH_VARARGS, "hash function fnv-1"},
-     {"fnv1a", fnv1a, METH_VARARGS, "hash function fnv-1a"},
-     {NULL, NULL, 0, NULL}
-};
-
-static struct PyModuleDef fnv512_module =
-{
-    PyModuleDef_HEAD_INIT,
-    "fnv512",
-    NULL,
-    -1,
-    fnv512_methods
-};
-
-PyMODINIT_FUNC
-PyInit_fnv512(void) {
-     return PyModule_Create(&fnv512_module);
-}
-*/
