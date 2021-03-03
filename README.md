@@ -8,21 +8,13 @@ fnv512 is an implementation for the FNV-0/FNV-1/FNV-1A 512 bits hashing algorith
 All credit goes to tweqx for this library
 
 ## Build Requirements
- - emcc (Emscripten)
+ - emcc (Emscripten) or clang++
  - updated C++11 libraries/includes
- - curl (for downloading Boost in chronotext-boost)
- - EMSCRIPTEN_PATH environmental variable set to your EMSDK directory
 
 ## Building the project yourself
 
-To install
- - create a directory for the project
- - clone the 1.62 branch of `chronotext-boost` (https://github.com/arielm/chronotext-boost/tree/1.62) into "chronotext-boost" directory inside the project directory (NOTE: if you do not switch to the 1.62 branch, you will receive errors about bitwise_cast later!)
- - clone this respository into `fnv512-wasm` directory in the project directory (chronotext-boost should be accessible by ../chronotext-boost when the current directory is fnv512-wasm)
- - change directory to `chronotext-boost` and follow the Setup and Build (only emscripten is needed) instructions on their repository. https://github.com/arielm/chronotext-boost/blob/1.62/README.md  This will build the Boost C++ library for webassembly.
- - change directory to `fnv512-wasm` (../fnv512-wasm)
- - run `./make-wasm.sh`
-
+ - run make to generate the tests, or ./make-wasm.sh to generate the JS loader and WASM
+ - note: fnv512-wasm.js is a barebones emscripten loader for the WASM Module.  fnv512-wrapped.js automatically loads and sets up a JS Object with more useful methods to you.
 
 
 ## Usage
