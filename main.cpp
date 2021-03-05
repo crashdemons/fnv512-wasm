@@ -38,7 +38,7 @@ int main(){
 	char* output2h = create_buffer(129);
 	output2h[128]=0;
 	_hexDigest(output2,output2h);
-	printf("fnv0 test output raw: %s\r\n",output);
+	printf("fnv0 test output raw: %s\r\n",output2h);
 
 
 
