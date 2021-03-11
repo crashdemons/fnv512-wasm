@@ -26,3 +26,5 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## License
 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)
+
+[uint512 stub](https://github.com/crashdemons/uint512_llvm) is available separately under LGPLv3 to allow reuse as a library.
